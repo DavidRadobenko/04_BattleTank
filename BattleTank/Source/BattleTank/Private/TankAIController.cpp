@@ -22,6 +22,12 @@ void ATankAIController::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("AIController is not finding the Player Tank"));
 }
 
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	AimTowardsPlayer();
+}
+
 ATank* ATankAIController::GetPossessedTank()
 {
 	return Cast<ATank>(GetPawn());
@@ -30,4 +36,10 @@ ATank* ATankAIController::GetPossessedTank()
 ATank* ATankAIController::GetPlayerTank() const
 {
 	return Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+}
+
+void ATankAIController::AimTowardsPlayer()
+{
+	if (!possessedTank) return;
+	possessedTank->AimAt(playerTank->GetActorLocation());
 }
