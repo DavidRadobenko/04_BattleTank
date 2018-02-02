@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -10,7 +11,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	
 }
@@ -39,24 +40,19 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 		FVector aimDirection = outLaunchVelocity.GetSafeNormal();
 		
 		MoveBarrelTowards(aimDirection);
-		
-		float time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), time);
 	}
-	else {
-		float time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: No aim solve found"), time);
-	}
-		
-
-
-	
-	
 }
 
 void UTankAimingComponent::SetBarrel(UTankBarrel * barrelToSet)
 {
+	if (!barrelToSet) return;
 	barrel = barrelToSet;
+}
+
+void UTankAimingComponent::SetTurret(UTankTurret* turretToSet)
+{
+	if (!turretToSet) return;
+	turret = turretToSet;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
@@ -66,5 +62,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 	FRotator deltaRotator = aimAsRotator - barrelRotator;
 
 	barrel->Elevate(deltaRotator.Pitch); //TODO remove hard coded number
+	turret->Rotate(deltaRotator.Yaw);
 }
 
