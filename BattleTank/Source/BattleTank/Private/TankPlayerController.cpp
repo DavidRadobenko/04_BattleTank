@@ -40,8 +40,6 @@ void ATankPlayerController::AimTowardsCrosshair()
 		}
 		controlledTank->AimAt(hitLocation);
 	}
-
-
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& outHitLocation) const
