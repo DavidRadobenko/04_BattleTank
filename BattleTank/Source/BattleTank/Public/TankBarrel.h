@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
-#include "Engine/World.h"
 #include "TankBarrel.generated.h"
 
 /**
@@ -22,7 +21,7 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere, Category = Setup)
-		float maxDegreesPerSecond = 20; // sensible default
+		float maxDegreesPerSecond = 5; // sensible default
 	
 	UPROPERTY(EditAnywhere, Category = Setup)
 		float minElevationDegrees = 0;

@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -19,6 +20,7 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 	if (!barrel) return;
 	FVector outLaunchVelocity;
 	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
+	// TODO bHaveAimingSolution will always return true, because in ATankPlayerController::GetLookVectorHitLocation we set the hitLocation to be 0,0,0 when hitting nothing in range.
 	bool bHaveAimingSolution = UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		outLaunchVelocity,
@@ -40,7 +42,6 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 		
 		float time = GetWorld()->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), time);
-		//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *GetOwner()->GetName(), *aimDirection.ToString());
 	}
 	else {
 		float time = GetWorld()->GetTimeSeconds();
@@ -63,8 +64,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimAsRotator = aimDirection.Rotation();
 	FRotator deltaRotator = aimAsRotator - barrelRotator;
-	//UE_LOG(LogTemp, Warning, TEXT("Delta Rotator: %s"), *deltaRotator.ToString());
 
-	barrel->Elevate(5); //TODO remove hard coded number
+	barrel->Elevate(deltaRotator.Pitch); //TODO remove hard coded number
 }
 
