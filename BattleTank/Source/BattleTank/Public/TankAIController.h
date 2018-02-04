@@ -26,10 +26,4 @@ private:
 	ATank* playerTank;
 
 	ATank* possessedTank;
-	
-	ATank* GetPossessedTank();
-
-	ATank* GetPlayerTank() const;
-
-	void AimTowardsPlayer();
 };

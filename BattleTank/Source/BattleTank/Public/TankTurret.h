@@ -18,7 +18,8 @@ public:
 	void Rotate(float relativeSpeed);
 	
 private:
-	UPROPERTY(EditAnywhere, Category = Setup)
+	// Set's throttle between -1 and +1
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		float maxDegreesPerSecond = 25;
 	
 };

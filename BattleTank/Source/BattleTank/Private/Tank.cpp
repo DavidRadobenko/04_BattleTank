@@ -49,14 +49,23 @@ void ATank::SetTurretReference(UTankTurret * turretToSet)
 
 void ATank::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 	if (!barrel) return;
+	if (!projectileBlueprint) {
+		UE_LOG(LogTemp, Error, TEXT("Projectile isn't setted in the BP_Tank"));
+		return;
+	}
 
-	// Spawns a projectile at the socket location of the barrel
-	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(
-		projectileBlueprint,
-		barrel->GetSocketLocation(FName("Projectile")),
-		barrel->GetSocketRotation(FName("Projectlie"))
-		);
-	projectile->LaunchProjectile(launchSpeed);
+	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+
+	if (isReloaded)
+	{
+		// Spawns a projectile at the socket location of the barrel
+		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(
+			projectileBlueprint,
+			barrel->GetSocketLocation(FName("Projectile")),
+			barrel->GetSocketRotation(FName("Projectlie"))
+			);
+		projectile->LaunchProjectile(launchSpeed);
+		lastFireTime = FPlatformTime::Seconds();
+	}
 }
