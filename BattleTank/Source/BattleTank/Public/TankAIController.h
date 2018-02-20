@@ -26,4 +26,7 @@ private:
 	ATank* playerTank;
 
 	ATank* possessedTank;
+
+	// How far can AI Tank can get
+	float acceptanceRadius = 3000;
 };

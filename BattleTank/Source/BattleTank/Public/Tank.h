@@ -11,6 +11,7 @@
 class UTankBarrel; 
 class UTankTurret;
 class UTankAimingComponent;
+class UTankMovementComponent;
 class AProjectile;
 
 UCLASS()
@@ -39,6 +40,9 @@ protected:
 
 	UTankAimingComponent* tankAimingComponent = nullptr;
 
+	UPROPERTY(BlueprintReadOnly, Category = Setup)
+		UTankMovementComponent* movementComponent = nullptr;
+
 public:	
 
 	// Called to bind functionality to input
@@ -54,6 +58,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		TSubclassOf<AProjectile> projectileBlueprint;
+
+	
 
 	// Local barrel reference for spawning projectile
 	UTankBarrel* barrel = nullptr;
