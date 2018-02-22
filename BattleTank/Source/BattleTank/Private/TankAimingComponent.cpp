@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright David Radobenko
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
@@ -16,9 +16,24 @@ UTankAimingComponent::UTankAimingComponent()
 	
 }
 
+void UTankAimingComponent::InitialiseAimingComponent(UTankBarrel * barrelToSet, UTankTurret * turretToSet)
+{
+	if (!(barrelToSet && turretToSet))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTankAimingComponent::InitialiseAimingComponent barrelToSet or turretToSet of %s is nullptr"), *GetOwner()->GetName());
+		return;
+	}
+	barrel = barrelToSet;
+	turret = turretToSet;
+}
+
 void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 {
-	if (!barrel) return;
+	if (!barrel)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTankAimingComponent::AimAt barrel of %s is nullptr"), *GetOwner()->GetName());
+		return;
+	}
 	FVector outLaunchVelocity;
 	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
 	// TODO bHaveAimingSolution will always return true, because in ATankPlayerController::GetLookVectorHitLocation we set the hitLocation to be 0,0,0 when hitting nothing in range.
@@ -43,20 +58,14 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 	}
 }
 
-void UTankAimingComponent::SetBarrel(UTankBarrel * barrelToSet)
-{
-	if (!barrelToSet) return;
-	barrel = barrelToSet;
-}
-
-void UTankAimingComponent::SetTurret(UTankTurret* turretToSet)
-{
-	if (!turretToSet) return;
-	turret = turretToSet;
-}
-
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 {
+	if (!(barrel && turret))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UTankAimingComponent::MoveBarrelTowards barrel or turret of %s is nullptr"), *GetOwner()->GetName());
+		return;
+	}
+
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimAsRotator = aimDirection.Rotation();
 	FRotator deltaRotator = aimAsRotator - barrelRotator;

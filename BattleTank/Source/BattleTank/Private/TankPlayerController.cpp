@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright David Radobenko
 
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 ATank* ATankPlayerController::GetControlledTank() const
@@ -13,32 +14,36 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	controlledTank = GetControlledTank();
-	if (!controlledTank)
+
+	UTankAimingComponent* aimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (!aimingComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController is not possesing a Tank"), *controlledTank->GetName());
+		UE_LOG(LogTemp, Error, TEXT("ATankPlayerController::BeginPlay aimingComponent is nullptr"));
+		return;
 	}
-	else
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController controlled Tank is: %s"), *controlledTank->GetName());
+
+	FoundAimingComponent(aimingComponent);
+		
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
+	UE_LOG(LogTemp, Error, TEXT("Tick"));
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!controlledTank) return;
+	if (!controlledTank)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATankPlayerController::AimTowardsCrosshair controlledTank is nullptr"));
+		return;
+	}
 
 	FVector hitLocation; //Out parameter
 	if (GetSightRayHitLocation(hitLocation))
 	{
-		if (!controlledTank)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Player Controller is missing the controlled Tank"));
-			return;
-		}
 		controlledTank->AimAt(hitLocation);
 	}
 }

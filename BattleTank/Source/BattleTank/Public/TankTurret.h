@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright David Radobenko
 
 #pragma once
 
@@ -19,7 +19,7 @@ public:
 	
 private:
 	// Set's throttle between -1 and +1
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		float maxDegreesPerSecond = 25;
 	
 };

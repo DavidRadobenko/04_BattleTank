@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright David Radobenko
 
 #pragma once
 
@@ -11,7 +11,6 @@
 class UTankBarrel; 
 class UTankTurret;
 class UTankAimingComponent;
-class UTankMovementComponent;
 class AProjectile;
 
 UCLASS()
@@ -25,44 +24,29 @@ public:
 
 	void AimAt(FVector hitLocation);
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrelReference(UTankBarrel* barrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetTurretReference(UTankTurret* turretToSet);
-
 	UFUNCTION(BlueprintCallable)
 		void Fire();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-	UTankAimingComponent* tankAimingComponent = nullptr;
-
-	UPROPERTY(BlueprintReadOnly, Category = Setup)
-		UTankMovementComponent* movementComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+		UTankAimingComponent* tankAimingComponent = nullptr;
 
 public:	
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 private:
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 		float launchSpeed = 4000; // TODO find sensible default
 	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 		float reloadTimeInSeconds = 3.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<AProjectile> projectileBlueprint;
 
-	
-
 	// Local barrel reference for spawning projectile
-	UTankBarrel* barrel = nullptr;
+	UTankBarrel* barrel = nullptr; //TODO remove
 
 	double lastFireTime = 0;
 };

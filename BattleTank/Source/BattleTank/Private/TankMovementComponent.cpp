@@ -3,24 +3,25 @@
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
 
-void UTankMovementComponent::Initialise(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet)
+void UTankMovementComponent::InitialiseMovementComponent(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet)
 {
-	if (!leftTrackToSet || !rightTrackToSet) 
+	if (!(leftTrackToSet && rightTrackToSet))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::Initialise one or both tracks are nullptr's"));
+		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::InitialiseMovementComponent leftTrackToSet or rightTrackToSet of %s is nullptr"), *GetOwner()->GetName());
 		return;
 	}
+			
 	leftTrack = leftTrackToSet;
 	rightTrack = rightTrackToSet;
 
-	//TODO prevent double speed due to dual control use
+	
 }
 
 void UTankMovementComponent::IntendMoveForward(float yAxis)
 {
-	if (!leftTrack || !rightTrack)
+	if (!(leftTrack && rightTrack))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::IntendMoveForward one or both tracks are nullptr's"));
+		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::IntendMoveForward leftTrack or rightTrack of %s is nullptr"), *GetOwner()->GetName());
 		return;
 	}
 	leftTrack->SetThrottle(yAxis);
@@ -29,13 +30,14 @@ void UTankMovementComponent::IntendMoveForward(float yAxis)
 
 void UTankMovementComponent::IntendTurnRight(float xAxis)
 {
-	if (!leftTrack || !rightTrack)
+	if (!(leftTrack && rightTrack))
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::IntendMoveForward one or both tracks are nullptr's"));
+		UE_LOG(LogTemp, Error, TEXT("UTankMovementComponent::IntendMoveForward leftTrack or rightTrack of %s is nullptr"), *GetOwner()->GetName());
 		return;
 	}
 	leftTrack->SetThrottle(xAxis);
 	rightTrack->SetThrottle(-xAxis);
+	
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)

@@ -9,22 +9,21 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 
 	possessedTank = Cast<ATank>(GetPawn());	
-	if (!possessedTank)
-		UE_LOG(LogTemp, Error, TEXT("AIController could'nt find the Possessed Tank"));
 	playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (!playerTank)
-		UE_LOG(LogTemp, Error, TEXT("AIController could'nt find the Player Tank"));
 }
 
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!playerTank) return;
-	if (!possessedTank) return;
+	if (!(playerTank && possessedTank))
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATankAIController::Tick playerTank or possessedTank of %s is nullptr"), *GetOwner()->GetName());
+		return;
+	}
 
 	// Move towards the Player
 	MoveToActor(playerTank, acceptanceRadius); 
 
 	possessedTank->AimAt(playerTank->GetActorLocation());
-	possessedTank->Fire(); //TODO don't fire every frame
+	possessedTank->Fire();
 }
