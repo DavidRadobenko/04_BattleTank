@@ -1,21 +1,19 @@
 // Copyright David Radobenko
 
 #include "TankPlayerController.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
-
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	controlledTank = GetControlledTank();
+	controlledTank = GetPawn();
+	if (!controlledTank)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATankPlayerController::BeginPlay controlledTank is nullptr"));
+	}
 
-	UTankAimingComponent* aimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
 	if (!aimingComponent)
 	{
 		UE_LOG(LogTemp, Error, TEXT("ATankPlayerController::BeginPlay aimingComponent is nullptr"));
@@ -30,21 +28,17 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
-	UE_LOG(LogTemp, Error, TEXT("Tick"));
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!controlledTank)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ATankPlayerController::AimTowardsCrosshair controlledTank is nullptr"));
-		return;
-	}
+	if (!controlledTank) return;
 
 	FVector hitLocation; //Out parameter
 	if (GetSightRayHitLocation(hitLocation))
 	{
-		controlledTank->AimAt(hitLocation);
+		if (!aimingComponent) return;
+		aimingComponent->AimAt(hitLocation);
 	}
 }
 

@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-
 #include "TankPlayerController.generated.h"
 
 //Forward decleration
-class ATank; 
 class UTankAimingComponent;
 
 /**
@@ -25,11 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 protected:
-	ATank * controlledTank = nullptr;
-
-	// Get the Controlled Tank
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		ATank * GetControlledTank() const;
+	APawn* controlledTank = nullptr;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 		void FoundAimingComponent(UTankAimingComponent* aimCompRef);
@@ -44,6 +38,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		float lineTraceRange = 1000000; //10km
+
+	UTankAimingComponent* aimingComponent = nullptr;
 
 	// Moves the Tank barrel to the Aimed destination
 	void AimTowardsCrosshair();

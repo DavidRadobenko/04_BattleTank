@@ -8,7 +8,7 @@
 
 // Enum for aiming State
 UENUM()
-enum class EFiringStatus : uint8
+enum class EFiringState : uint8
 {
 	Locked,
 	Aiming,
@@ -18,6 +18,7 @@ enum class EFiringStatus : uint8
 // Forwards Declaration
 class UTankBarrel; 
 class UTankTurret;
+class AProjectile;
 
 // Hold barrel's properties and Elevate method
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -34,17 +35,38 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void InitialiseAimingComponent(UTankBarrel* barrelToSet, UTankTurret* turretToSet);
 
-	void AimAt(FVector hitLocation, float launchSpeed);
+	void AimAt(FVector hitLocation);
+
+	UFUNCTION(BlueprintCallable)
+		void Fire();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EFiringStatus firingStatus = EFiringStatus::Aiming;
+		EFiringState firingState = EFiringState::Reloading;
 
 private:
 	UTankBarrel * barrel = nullptr;
 
 	UTankTurret* turret = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float reloadTimeInSeconds = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<AProjectile> projectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float launchSpeed = 4000; // TODO find sensible default
+
+	double lastFireTime = 0;
+
+	FVector aimDirection;
+
+	virtual void BeginPlay() override;
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	void MoveBarrelTowards(FVector aimDirection);
  
+	bool IsBarrelMoving();
 };
