@@ -21,6 +21,11 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+protected:
+
+	// How far can AI Tank can get
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float acceptanceRadius = 8000;
 
 private:
 	APawn* playerTank;
@@ -29,6 +34,5 @@ private:
 
 	UTankAimingComponent* aimingComponent = nullptr;
 
-	// How far can AI Tank can get
-	float acceptanceRadius = 3000;
+	
 };
