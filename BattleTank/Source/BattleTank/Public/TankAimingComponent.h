@@ -55,20 +55,21 @@ private:
 
 	UTankTurret* turret = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-		float reloadTimeInSeconds = 3.0f;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<AProjectile> projectileBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-		float launchSpeed = 4000; // TODO find sensible default
+		float launchSpeed = 4000;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float reloadTimeInSeconds = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		uint8 ammo = 3;
 
 	double lastFireTime = 0;
 
 	FVector aimDirection;
-
-	uint8 ammo = 3;
 
 	virtual void BeginPlay() override;
 
